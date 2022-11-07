@@ -10,6 +10,7 @@ class MarkerSerializer(serializers.GeoFeatureModelSerializer):
 
     class Meta:
         """Marker serializer meta class."""
-        fields = ("id", "link_id, name")
+        fields = ("id")
         geo_field = "location"
+        LV="statLV"
         model = JoinedLink

@@ -1,25 +1,17 @@
 """Markers API views."""
 from rest_framework import viewsets
 from rest_framework_gis import filters
-from django.db import connection
-from .models import JoinedLink
-from .models import Marker
-from .serializers import MarkerSerializer
 
+from .models import JoinedLink
+from .serializers import MarkerSerializer
 
 class MarkerViewSet(viewsets.ReadOnlyModelViewSet):
     """Marker view set."""
+    from django.db import connection
     cursor=connection.cursor()
-    cursor.execute("""
-                TRUNCATE main_joinedlink;
-                INSERT INTO main_joinedlink 
-                select main_link.id, main_link.link_id, main_marker.name, main_link.location 
-                from main_link,main_marker 
-                where ST_CONTAINS(main_link.location, main_marker.location);
-                   """)
-    queryset=JoinedLink.objects.all()
+    cursor.execute("DELETE from public.main_marker where (now() - date) < interval '6 hour'; TRUNCATE main_joinedlink; INSERT INTO main_joinedlink overriding system value select main_link.id+1, main_link.location, main_marker.stat from main_link,main_marker  where ST_CONTAINS(main_link.location, main_marker.location);")
     connection.close() 
+    queryset=JoinedLink.objects.all()
     bbox_filter_field = "location"
     filter_backends = (filters.InBBoxFilter,)
-    queryset = JoinedLink.objects.all()
     serializer_class = MarkerSerializer
