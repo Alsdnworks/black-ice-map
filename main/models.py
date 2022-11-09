@@ -20,4 +20,4 @@ class Link(models.Model):
 class JoinedLink(models.Model):
     """A Link with name and location."""
     location = MultiPolygonField()    
-    statLV=models.BigIntegerField()
+    statlv=models.BigIntegerField()

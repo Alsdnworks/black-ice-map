@@ -8,18 +8,20 @@ map.fitWorld();
 
 const markers = JSON.parse(document.getElementById("markers-data").textContent);
 
-let feature = L.geoJSON(markers,{
+var feature = L.geoJSON(markers,{
     onEachFeature: function (feature, layer) {
-            if (feature.properties.statLV ==1) {
-            layer.setStyle({fillColor: '#0000FF ', fillOpacity: 0.5, color: '#0000FF ', weight: 0.1, opacity: 0.5});
+        L.marker([feature.geometry.coordinates[0][0][1], feature.geometry.coordinates[0][0][0]]).bindPopup(feature.properties.name);
+            if (feature.properties.statlv ==1) {                
+            layer.setStyle({fillColor: '#0000FF ', fillOpacity: 1, color: '#0000FF ', weight: 1, opacity: 1});
             }
-            else if (feature.properties.statLV ==2) {
-            layer.setStyle({fillColor: '#FFFF00 ', fillOpacity: 0.5, color: '#FFFF00 ', weight: 0.1, opacity: 0.5});
+            else if (feature.properties.statlv ==2) {
+            layer.setStyle({fillColor: '#FFFF00 ', fillOpacity: 1, color: '#FFFF00 ', weight: 1, opacity: 1});
             }
-            else if (feature.properties.statLV ==3) {
-            layer.setStyle({fillColor: '#FF0000 ', fillOpacity: 0.5, color: '#FF0000 ', weight: 0.1, opacity: 0.5});
+            else if (feature.properties.statlv ==3) {
+            layer.setStyle({fillColor: '#FF0000 ', fillOpacity: 1, color: '#FF0000 ', weight: 1, opacity: 1});
             }
         }
-    }).addTo(map);
+    })
+    .addTo(map);
 
 map.fitBounds(feature.getBounds(), { padding: [100, 100] });
