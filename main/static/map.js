@@ -7,6 +7,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 map.fitWorld();
 
 const markers = JSON.parse(document.getElementById("markers-data").textContent);
+//const lines = JSON.parse(document.getElementById("statuss").textContent);
 
 var feature = L.geoJSON(markers,{
     onEachFeature: function (feature, layer) {
@@ -25,3 +26,4 @@ var feature = L.geoJSON(markers,{
     .addTo(map);
 
 map.fitBounds(feature.getBounds(), { padding: [100, 100] });
+

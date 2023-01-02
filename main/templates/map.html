@@ -9,8 +9,47 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
+    <!--input start and end point-->
+    <input type="text" id="search" name="search" />
+    <ul id="search-results">
+    </ul>
+
+                <p>{{statuss}}</p>
+            
+
+    <!--{{ markers|json_script:"markers-data" }}-->
     {{ markers|json_script:"markers-data" }}
     <div id="map"></div>
     <script src="{% static 'map.js' %}"></script>
+    
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var timeout = null;
+  
+        $('#search').keyup(function () {
+           clearTimeout(timeout);
+  
+           timeout = setTimeout(function () {
+  
+              $.ajax({
+                 type: "GET",
+                 url: "/main/search/",
+                 data: {
+                     'search_text' : $('#search').val(),
+                     'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                 },
+                 success: searchSuccess,
+                 dataType: 'html'
+             });
+           }, 1000);
+        });
+     }); 
+    function searchSuccess(data, textStatus, jqXHR)
+    {
+        $('#search-results').html(data)
+    }
+</script>
 </body>
 </html>
