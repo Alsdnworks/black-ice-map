@@ -22,7 +22,8 @@ SECRET_KEY = SK["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-if DEBUG:
+debugMode = True
+if debugMode:
     import mimetypes
     mimetypes.add_type("application/javascript", ".js", True)
 ALLOWED_HOSTS = []
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'main',
     'debug_toolbar',
-
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
