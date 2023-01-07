@@ -1,55 +1,70 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Markers Map</title>
+    <title>NAVIGATION</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'map.css' %}">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-</head>
-<body>
-    <!--input start and end point-->
-    <input type="text" id="search" name="search" />
-    <ul id="search-results">
-    </ul>
-
-                <p>{{statuss}}</p>
-            
-
-    <!--{{ markers|json_script:"markers-data" }}-->
-    {{ markers|json_script:"markers-data" }}
-    <div id="map"></div>
-    <script src="{% static 'map.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script type="text/javascript">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>    
 
-    $(function () {
-        var timeout = null;
-  
-        $('#search').keyup(function () {
-           clearTimeout(timeout);
-  
-           timeout = setTimeout(function () {
-  
+    <nav class="navbar justify-content-start navbar-light bg-light">
+        <a class="navbar-brand">NAVIGATION<br></a>
+        <form class="form-inline">
+          출발지: <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="jbInput1">
+          도착지: <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="jbInput2">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="jbInputButton">최단경로 검색</button>
+        </form>
+    </nav>
+    <span class="d-block p-2 bg-dark text-white" id="porogrees">검색대기</span>
+    <span class="d-block p-2 bg-dark text-white">소요시간: {{time}}분<br>거리: {{cost}}km</span>
+    {{markers|json_script:"markers-data"}}    
+    {{statuss|json_script:"lines-data"}}
+    <script>
+        var statuss = JSON.parse(document.getElementById("lines-data").textContent);
+        var markers = JSON.parse(document.getElementById("markers-data").textContent);
+    </script>
+
+    <div id="map"></div>
+    <div id="status"></div>
+    <script src="{% static 'map.js' %}"></script>
+    <script type="text/javascript"> 
+        var container = L.DomUtil.get('map');
+        if (container != null) {
+            container._leaflet_id = null;
+        }
+    </script>
+    <script>
+        $('button#jbInputButton').click(function () {
+            document.getElementById("porogrees").innerHTML = "검색중입니다. 잠시만 기다려주세요.";
+            console.log($('input#jbInput1').val());
+            console.log($('input#jbInput2').val());
               $.ajax({
                  type: "GET",
-                 url: "/main/search/",
+                 url: "/main/map/",
                  data: {
-                     'search_text' : $('#search').val(),
+                     'search_text1' : $('input#jbInput1').val(),
+                     'search_text2' : $('input#jbInput2').val(),
                      'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
                  },
                  success: searchSuccess,
-                 dataType: 'html'
+                 dataType: 'HTML'
              });
-           }, 1000);
         });
-     }); 
     function searchSuccess(data, textStatus, jqXHR)
-    {
-        $('#search-results').html(data)
-    }
+    {         
+        document.open();
+        document.write(data);
+        document.close();
+    };
 </script>
 </body>
 </html>

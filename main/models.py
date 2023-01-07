@@ -22,6 +22,16 @@ class JoinedLink(models.Model):
 
 class moct_links(models.Model):
     """A Link with name and location."""
-    location = MultiLineStringField()
+    location = LineStringField()
     fnode_id=models.CharField(max_length=255)
     fnode_name=models.CharField(max_length=255)
+
+class res_links(models.Model):
+    """A Link with name and location."""
+    min_cost=models.FloatField()
+    max_spd=models.IntegerField()
+    length=models.FloatField()
+    agg_cost=models.FloatField()
+    geom=LineStringField()
+    path_seq=models.IntegerField()
+    road_name=models.CharField(max_length=255)
